@@ -1,6 +1,6 @@
 {
   "name": "remotestorage-util-credentials-store",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Facilitates encryption and storage of credentials",
   "main": "index.js",
   "scripts": {

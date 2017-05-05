@@ -1,0 +1,15 @@
+{
+  "name": "remotestorage-util-credentials-store",
+  "version": "1.0.0",
+  "description": "Facilitates encryption and storage of credentials",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "remotestorage",
+    "remotestorage-util"
+  ],
+  "author": "Michiel de Jong <michiel@unhosted.org>",
+  "license": "MIT"
+}

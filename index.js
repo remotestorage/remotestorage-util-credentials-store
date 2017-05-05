@@ -1,3 +1,5 @@
+const sjcl = require('sjcl');
+
 /**
  * Class: CredentialsStore
  *
@@ -49,7 +51,6 @@ function CredentialsStore(moduleName, privClient) {
  *
  * Throws:
  *   'config should be an object'
- *   'please include sjcl.js (the Stanford JS Crypto Library) in your app'
  *   'Schema Not Found' (if you didn't call declareType first)
  *   'Please follow the config schema - (followed by the schema from your declareType)'
  */
@@ -58,9 +59,6 @@ CredentialsStore.prototype.setConfig = function(pwd, config) {
 
   if (typeof(config) !== 'object') {
     throw 'config should be an object';
-  }
-  if (pwd && (typeof sjcl === 'undefined')) {
-    throw 'please include sjcl.js (the Stanford JS Crypto Library) in your app';
   }
   if (this.moduleName === 'sockethub-credentials' || this.moduleName === 'irc-credentials') {
     config['@context'] = 'http://remotestorage.io/spec/modules/' + this.moduleName + '/credentials';
@@ -88,16 +86,12 @@ CredentialsStore.prototype.setConfig = function(pwd, config) {
  *   maxAge - maxAge to pass to baseClient.getFile
  *
  * Throws:
- *   'please include sjcl.js (the Stanford JS Crypto Library) in your app'
  *   'could not decrypt (moduleName)-config with that password'
  *   'could not parse (moduleName)-config as unencrypted JSON'
  *   '(moduleName)-config is encrypted, please specify a password for decryption'
  *   '(moduleName)-config is not encrypted, or encrypted with a different algorithm'
  */
 CredentialsStore.prototype.getConfig = function(pwd, maxAge) {
-  if (pwd && (typeof sjcl === 'undefined')) {
-    throw 'please include sjcl.js (the Stanford JS Crypto Library) in your app';
-  }
   return this.privClient.getFile(this.moduleName + '-config', maxAge).then(function(a) {
     if (typeof(a) === 'object' && typeof(a.data) === 'string') {
       if (typeof(pwd) === 'string') {
@@ -137,7 +131,6 @@ CredentialsStore.prototype.getConfig = function(pwd, maxAge) {
  *   pwd - String value of the password for client-side encryption, or undefined.
  *
  * Throws:
- *   'please include sjcl.js (the Stanford JS Crypto Library) in your app'
  *   'could not decrypt (moduleName)-config with that password'
  *   'could not parse (moduleName)-config as unencrypted JSON'
  *   '(moduleName)-config is encrypted, please specify a password for decryption'

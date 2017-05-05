@@ -11,5 +11,8 @@
     "remotestorage-util"
   ],
   "author": "Michiel de Jong <michiel@unhosted.org>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sjcl": "^1.0.6"
+  }
 }

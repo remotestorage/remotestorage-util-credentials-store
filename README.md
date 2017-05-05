@@ -17,14 +17,14 @@ Given a moduleName and a privateClient, this class provides a getConfig and
 a setConfig function which you can directly use in your module. It also
 deals with optional client-side encryption, and exposes a change event for
 the config you store in it. It assumes your module declares a type called
-'config' using BaseClient.declareType. Other than that, you will be able to
+`config` using `BaseClient.declareType`. Other than that, you will be able to
 pretty much expose the three methods directly on your module.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>String</code> | the name of the module in which you are using it, but without the "-credentials" suffix. |
-| privClient | <code>Object</code> | The private BaseClient for your module, you get this from the callback call in remoteStorage.defineModule |
+| privClient | <code>Object</code> | The private `BaseClient` for your module. You get this from the callback call in `remoteStorage.defineModule` |
 
 <a name="CredentialsStore+setConfig"></a>
 

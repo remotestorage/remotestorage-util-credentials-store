@@ -5,13 +5,13 @@ const sjcl = require('sjcl');
  * a setConfig function which you can directly use in your module. It also
  * deals with optional client-side encryption, and exposes a change event for
  * the config you store in it. It assumes your module declares a type called
- * 'config' using BaseClient.declareType. Other than that, you will be able to
+ * `config` using `BaseClient.declareType`. Other than that, you will be able to
  * pretty much expose the three methods directly on your module.
  *
  * @param {String} name - the name of the module in which you are using it, but
  * without the "-credentials" suffix.
- * @param {Object} privClient - The private BaseClient for your module, you get
- * this from the callback call in remoteStorage.defineModule
+ * @param {Object} privClient - The private `BaseClient` for your module. You
+ * get this from the callback call in `remoteStorage.defineModule`
  *
  * @class
  */
@@ -120,7 +120,8 @@ CredentialsStore.prototype.getConfig = function(pwd, maxAge) {
 /**
  * Get the config/credentials, or wait for it to become available
  *
- * @param {String} pwd - String value of the password for client-side encryption, or undefined.
+ * @param {String} pwd - String value of the password for client-side
+ * encryption, or undefined.
  *
  * @throws An error with one of these messages:
  *     - 'could not decrypt (moduleName)-config with that password'

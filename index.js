@@ -1,22 +1,19 @@
 const sjcl = require('sjcl');
 
 /**
- * Class: CredentialsStore
+ * Given a moduleName and a privateClient, this class provides a getConfig and
+ * a setConfig function which you can directly use in your module. It also
+ * deals with optional client-side encryption, and exposes a change event for
+ * the config you store in it. It assumes your module declares a type called
+ * 'config' using BaseClient.declareType. Other than that, you will be able to
+ * pretty much expose the three methods directly on your module.
  *
- * Given a moduleName and a privateClient, this class provides
- * a getConfig and a setConfig function which you can directly
- * use in your module. It also deals with optional client-side
- * encryption, and exposes a change event for the config you
- * store in it. It assumes your module declares a type
- * called 'config' using BaseClient.declareType. Other than
- * that, you will be able to pretty much expose the three methods
- * directly on your module.
+ * @param {String} name - the name of the module in which you are using it, but
+ * without the "-credentials" suffix.
+ * @param {Object} privClient - The private BaseClient for your module, you get
+ * this from the callback call in remoteStorage.defineModule
  *
- * Parameters:
- *   moduleName - String, the name of the module in which you are
- *                    using it, but without the "-credentials" suffix.
- *   privClient - The private BaseClient for your module, you get this from
- *                    the callback call in remoteStorage.defineModule
+ * @class
  */
 function CredentialsStore(moduleName, privClient) {
   this.algorithmPrefix =  'AES-CCM-128:';
@@ -41,18 +38,17 @@ function CredentialsStore(moduleName, privClient) {
 }
 
 /**
- * Function: setConfig
- *
  * Set the config/credentials
  *
- * Parameters:
- *   pwd - String value of the password for client-side encryption, or undefined.
- *   config - object, the config/credentials to be saved.
+ * @method
  *
- * Throws:
- *   'config should be an object'
- *   'Schema Not Found' (if you didn't call declareType first)
- *   'Please follow the config schema - (followed by the schema from your declareType)'
+ * @param {String} pwd - String value of the password for client-side encryption, or undefined.
+ * @param {Object} config - The config/credentials to be saved.
+ *
+ * @throws An error with one of these messages:
+ *     - 'config should be an object'
+ *     - 'Schema Not Found' (if you didn't call declareType first)
+ *     - 'Please follow the config schema - (followed by the schema from your declareType)'
  */
 CredentialsStore.prototype.setConfig = function(pwd, config) {
   console.log('setConfig', this.moduleName, pwd, config, JSON.stringify(config));
@@ -77,19 +73,18 @@ CredentialsStore.prototype.setConfig = function(pwd, config) {
 };
 
 /**
- * Function: getConfig
- *
  * Get the config/credentials
  *
- * Parameters:
- *   pwd - String value of the password for client-side encryption, or undefined.
- *   maxAge - maxAge to pass to baseClient.getFile
+ * @param {String} pwd - String value of the password for client-side encryption, or undefined.
+ * @param {String} maxAge - `maxAge` to pass to `baseClient.getFile`
  *
- * Throws:
- *   'could not decrypt (moduleName)-config with that password'
- *   'could not parse (moduleName)-config as unencrypted JSON'
- *   '(moduleName)-config is encrypted, please specify a password for decryption'
- *   '(moduleName)-config is not encrypted, or encrypted with a different algorithm'
+ * @throws An error with one of these messages:
+ *     - 'could not decrypt (moduleName)-config with that password'
+ *     - 'could not parse (moduleName)-config as unencrypted JSON'
+ *     - '(moduleName)-config is encrypted, please specify a password for decryption'
+ *     - '(moduleName)-config is not encrypted, or encrypted with a different algorithm'
+ *
+ * @method
  */
 CredentialsStore.prototype.getConfig = function(pwd, maxAge) {
   return this.privClient.getFile(this.moduleName + '-config', maxAge).then(function(a) {
@@ -123,23 +118,22 @@ CredentialsStore.prototype.getConfig = function(pwd, maxAge) {
 };
 
 /**
- * Function: onceConfig
- *
  * Get the config/credentials, or wait for it to become available
  *
- * Parameters:
- *   pwd - String value of the password for client-side encryption, or undefined.
+ * @param {String} pwd - String value of the password for client-side encryption, or undefined.
  *
- * Throws:
- *   'could not decrypt (moduleName)-config with that password'
- *   'could not parse (moduleName)-config as unencrypted JSON'
- *   '(moduleName)-config is encrypted, please specify a password for decryption'
- *   '(moduleName)-config is not encrypted, or encrypted with a different algorithm'
+ * @throws An error with one of these messages:
+ *     - 'could not decrypt (moduleName)-config with that password'
+ *     - 'could not parse (moduleName)-config as unencrypted JSON'
+ *     - '(moduleName)-config is encrypted, please specify a password for decryption'
+ *     - '(moduleName)-config is not encrypted, or encrypted with a different algorithm'
+ *
+ * @method
  */
 CredentialsStore.prototype.onceConfig = function(pwd) {
-  return this.getConfig(pwd, 20000).then(undefined, function(err) {//allow config to be 20 seconds old
+  return this.getConfig(pwd, 20000).then(undefined, function(/* err */) {//allow config to be 20 seconds old
     var pending = Promise.defer();
-    this.privClient.on('change', function(evt) {
+    this.privClient.on('change', function(/* evt */) {
       this.onceConfig(pwd).then(function(data) {
         pending.resolve(data);
       });
@@ -149,14 +143,13 @@ CredentialsStore.prototype.onceConfig = function(pwd) {
 };
 
 /**
- * Function: on
- *
  * Register an event handler. Currently only used for change events.
  *
- * Parameters:
- *   eventName - Has to be the String 'change'
- *   handler   - The function that should be called when the config changes.
- *                   It will be called without any arguments.
+ * @param {String} eventName - Has to be the String 'change'
+ * @param {Function} handler - The function that should be called when the
+ * config changes. It will be called without any arguments.
+ *
+ * @method
  */
 CredentialsStore.prototype.on = function(eventName, handler) {
   if (eventName === 'change') {

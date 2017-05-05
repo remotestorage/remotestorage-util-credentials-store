@@ -12,7 +12,14 @@
   ],
   "author": "Michiel de Jong <michiel@unhosted.org>",
   "license": "MIT",
+  "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0"
+  },
   "dependencies": {
     "sjcl": "^1.0.6"
+  },
+  "scripts": {
+    "doc": "jsdoc2md index.js > README.md",
+    "preversion": "npm run doc && git add README.md"
   }
 }

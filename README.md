@@ -13,12 +13,12 @@
 <a name="new_CredentialsStore_new"></a>
 
 ### new CredentialsStore(name, privClient)
-Given a moduleName and a privateClient, this class provides a getConfig and
-a setConfig function which you can directly use in your module. It also
-deals with optional client-side encryption, and exposes a change event for
-the config you store in it. It assumes your module declares a type called
-`config` using `BaseClient.declareType`. Other than that, you will be able to
-pretty much expose the three methods directly on your module.
+This rs.js module utility class provides a `getConfig` and a `setConfig`
+function which you can directly use in your module. It also deals with
+optional client-side encryption, and exposes a change event for the config
+you store in it. It assumes your module declares a type called `config`
+using `BaseClient.declareType`. Other than that, you will be able to pretty
+much expose the three methods directly on your module.
 
 
 | Param | Type | Description |
